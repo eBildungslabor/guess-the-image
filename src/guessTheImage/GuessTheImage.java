@@ -10,8 +10,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -149,8 +147,8 @@ public class GuessTheImage {
             return;
         }
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int tileHeight = (Math.min(originalImage.getHeight(), (int) dimension.getHeight()) - 39) / tilesVer;
-        int tileWidth = (Math.min(originalImage.getWidth(), (int) dimension.getWidth()) - 16) / tilesHor;
+        int tileHeight = Math.min(originalImage.getHeight(), (int) dimension.getHeight()) / tilesVer;
+        int tileWidth = Math.min(originalImage.getWidth(), (int) dimension.getWidth()) / tilesHor;
         int height = tileHeight * tilesVer, width = tileWidth * tilesHor;
         BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = resizedImage.createGraphics();
@@ -161,7 +159,7 @@ public class GuessTheImage {
         g.drawImage(originalImage, 0, 0, width, height, null);
         g.dispose();
         frame = new JFrame(TITLE);
-        frame.setSize(width + 16, height + 39);
+        frame.setSize(width, height);
         frame.setLocationRelativeTo(null);
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setBounds(0, 0, width, height);
@@ -180,12 +178,7 @@ public class GuessTheImage {
             }
         }
         frame.setVisible(true);
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                exit("The image was " + imageName, JOptionPane.ERROR_MESSAGE);
-            }
-        });
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         layeredPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -204,7 +197,11 @@ public class GuessTheImage {
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_G) {
+                    exit("The image was " + imageName, JOptionPane.ERROR_MESSAGE);
+                }
+                if (key == KeyEvent.VK_SPACE) {
                     int x, y;
                     do {
                         x = RANDOM.nextInt(tilesVer);
@@ -215,7 +212,7 @@ public class GuessTheImage {
                     openings++;
                     controls();
                 }
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (key == KeyEvent.VK_ENTER) {
                     Object object;
                     if (answerType) {
                         object = JOptionPane.showInputDialog(null, "Guess the image!", TITLE,

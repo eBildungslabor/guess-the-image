@@ -12,7 +12,7 @@ Try to recognize the partially visible images.
 * Press _ENTER_ to guess the image.
 * Select a name from the list or enter it manually.
 * Informing about which images are already used before.
-* Give up by closing the window.
+* Give up by pressing _G_.
 * Choose whether to continue to round or give up when you reach the tile opening limit.
 * Controlling the completion of the image and the images in the database.
 * Viewing detailed statistics about total number of tile openings at the end.
